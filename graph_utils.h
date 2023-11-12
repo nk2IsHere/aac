@@ -124,4 +124,29 @@ void writeGraph(std::ofstream& outputFile, const MultigraphAdjacencyMatrix& mult
     }
 }
 
+
+std::pair<int, MultigraphAdjacencyMatrix> readGraphFromFile(const std::string& filename) {
+    std::ifstream inputFile(filename);
+    if (!inputFile.is_open()) {
+        std::cout << "Error: cannot open file " << filename << std::endl;
+        throw std::runtime_error("Cannot open file");
+    }
+
+    auto [numberOfVertices, multigraph] = readGraph(inputFile);
+    inputFile.close();
+
+    return {numberOfVertices, multigraph};
+}
+
+void writeGraphToFile(const std::string& filename, const MultigraphAdjacencyMatrix& multigraph) {
+    std::ofstream outputFile(filename);
+    if (!outputFile.is_open()) {
+        std::cout << "Error: cannot open file " << filename << std::endl;
+        throw std::runtime_error("Cannot open file");
+    }
+
+    writeGraph(outputFile, multigraph);
+    outputFile.close();
+}
+
 #endif //AAC_LABORATORIES_GRAPH_UTILS_H
