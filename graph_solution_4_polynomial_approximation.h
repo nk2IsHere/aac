@@ -47,8 +47,8 @@ bool isSelected(
 }
 
 std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomialApproximation(
-    MultigraphAdjacencyMatrix multigraph1,
-    MultigraphAdjacencyMatrix multigraph2,
+    const MultigraphAdjacencyMatrix& multigraph1,
+    const MultigraphAdjacencyMatrix& multigraph2,
     bool shouldIncludeStartVertices = false,
     int startVertex1 = 0,
     int startVertex2 = 0
@@ -110,8 +110,8 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomi
 }
 
 std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomialApproximationImprovedSearch(
-    MultigraphAdjacencyMatrix multigraph1,
-    MultigraphAdjacencyMatrix multigraph2
+    const MultigraphAdjacencyMatrix& multigraph1,
+    const MultigraphAdjacencyMatrix& multigraph2
 ) {
     // Time complexity: O(V^3 * V^2 * V^2)
 

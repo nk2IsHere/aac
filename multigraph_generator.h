@@ -26,6 +26,11 @@ MultigraphAdjacencyMatrix generateMultigraph(int numVertices, int numEdges) {
         multigraph[vertex2][vertex1]++;
     }
 
+    // Make the multigraph now have self-loops
+    for (int i = 0; i < numVertices; ++i) {
+        multigraph[i][i] = 0;
+    }
+
     return multigraph;
 }
 
