@@ -107,5 +107,19 @@ int main() {
     }
     std::cout << std::endl;
 
+    std::cout << "Running maximal common submultigraph polynomial approximation improved: " << std::endl;
+    auto [selection1PolynomialApproximationImproved, selection2PolynomialApproximationImproved] = maximalCommonSubmultigraphPolynomialApproximationImprovedSearch(multigraph2, multigraph3);
+    std::cout << "Maximal common submultigraph polynomial approximation improved: " << std::endl;
+    std::cout << "Selection 1: ";
+    for (const auto vertex: selection1PolynomialApproximationImproved) {
+        std::cout << vertex << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Selection 2: ";
+    for (const auto vertex: selection2PolynomialApproximationImproved) {
+        std::cout << vertex << " ";
+    }
+    std::cout << std::endl;
+
     return 0;
 }

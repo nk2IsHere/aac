@@ -48,13 +48,16 @@ bool isSelected(
 
 std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomialApproximation(
     MultigraphAdjacencyMatrix multigraph1,
-    MultigraphAdjacencyMatrix multigraph2
+    MultigraphAdjacencyMatrix multigraph2,
+    bool shouldIncludeStartVertices = false,
+    int startVertex1 = 0,
+    int startVertex2 = 0
 ) {
     // Time complexity: O(V^3 * V^2)
     // Outer while loop: The outer loop continues until no improvements can be made. In the worst case, this can take O(V) iterations.
 
-    std::vector<int> selection1;
-    std::vector<int> selection2;
+    std::vector<int> selection1 = shouldIncludeStartVertices ? std::vector<int>{startVertex1} : std::vector<int>();
+    std::vector<int> selection2 = shouldIncludeStartVertices ? std::vector<int>{startVertex2} : std::vector<int>();
 
     int minimalCurrentGraphEditDistance = std::numeric_limits<int>::max();
     bool graphEditDistanceHasImproved = true;
@@ -104,6 +107,59 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomi
     }
 
     return {selection1, selection2};
+}
+
+std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomialApproximationImprovedSearch(
+    MultigraphAdjacencyMatrix multigraph1,
+    MultigraphAdjacencyMatrix multigraph2
+) {
+    // Time complexity: O(V^3 * V^2 * V^2)
+
+    std::pair<std::vector<int>, std::vector<int>> bestSubmultigraph;
+    int bestSubmultigraphGraphEditDistance = std::numeric_limits<int>::max();
+    int bestVertexCount = 0;
+
+    // Iterating over all possible starting vertex pairs
+    for (int startVertex1 = 0; startVertex1 < multigraph1.size(); ++startVertex1) {
+        for (int startVertex2 = 0; startVertex2 < multigraph2.size(); ++startVertex2) {
+            auto currentSubmultigraphSelections = maximalCommonSubmultigraphPolynomialApproximation(
+                multigraph1,
+                multigraph2,
+                true,
+                startVertex1,
+                startVertex2
+            );
+
+            int currentVertexCount = currentSubmultigraphSelections.first.size();
+
+            auto currentSubmultigraphSelection1Multigraph = makeSubmultigraphFromSelection(
+                multigraph1,
+                currentSubmultigraphSelections.first
+            );
+
+            auto currentSubmultigraphSelection2Multigraph = makeSubmultigraphFromSelection(
+                multigraph2,
+                currentSubmultigraphSelections.second
+            );
+
+            auto currentGraphEditDistance = graphEditDistancePolynomialApproximation(
+                currentSubmultigraphSelection1Multigraph,
+                currentSubmultigraphSelection2Multigraph
+            );
+
+            // Update the best submultigraph if the new one is better
+            if (
+                currentVertexCount > bestVertexCount
+                || (currentVertexCount == bestVertexCount && currentGraphEditDistance < bestSubmultigraphGraphEditDistance)
+            ) {
+                bestSubmultigraphGraphEditDistance = currentGraphEditDistance;
+                bestSubmultigraph = currentSubmultigraphSelections;
+                bestVertexCount = currentVertexCount;
+            }
+        }
+    }
+
+    return bestSubmultigraph;
 }
 
 #endif //AAC_LABORATORIES_GRAPH_SOLUTION_4_POLYNOMIAL_APPROXIMATION_H
