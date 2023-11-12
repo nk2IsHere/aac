@@ -2,6 +2,7 @@
 // Created by Nikita Kozlov on 05.11.2023.
 //
 
+#include <numeric>
 #include "graph_utils.h"
 #include "graph_solution_2.h"
 #include "graph_solution_3.h"
@@ -62,55 +63,40 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
 
                 // If GED is 0, then the submultigraphs are isomorphic
                 if (graphEditDistance(submultigraph1, submultigraph2) == 0) {
-                    // Compare by vertices
-                    if(selection1.size() > currentMaximalCommonSubmultigraphSize.first) {
-                        currentMaximalCommonSubmultigraphSize = {selection1.size(), selection2.size()};
-                        currentMaximalCommonSubmultigraph = {selection1, selection2};
-                    }
+                   auto submultigraphSize = size(submultigraph1);
 
-                    // Compare by edges
-                    if(selection1.size() == currentMaximalCommonSubmultigraphSize.first && selection2.size() > currentMaximalCommonSubmultigraphSize.second) {
-                        currentMaximalCommonSubmultigraphSize = {selection1.size(), selection2.size()};
-                        currentMaximalCommonSubmultigraph = {selection1, selection2};
-                    }
+                   if (compareSize(submultigraphSize, currentMaximalCommonSubmultigraphSize) == 1) {
+                       currentMaximalCommonSubmultigraphSize = submultigraphSize;
+                       currentMaximalCommonSubmultigraph = {selection1, selection2};
+                   }
+                   continue;
                 }
 
-                // If GED is not 0 we can still look for the maximal common submultigraph where one graph
-                // can cover the other using edges
+                // If GED is not 0 we can still look for the maximal common submultigraph where
+                // we take the submultigraph of minimal connections per 2 vertices in both multigraphs
+                // ie for degree sequences:
+                // 5 4 3 5 2
+                // 5 4 4 4 1
+                // the result will be:
+                // 5 4 3 4 1
+
                 auto degreeSequence1 = degreeSequence(submultigraph1);
                 auto degreeSequence2 = degreeSequence(submultigraph2);
 
-                auto maxDegreeSequence = degreeSequence1[0] > degreeSequence2[0]
-                    ? degreeSequence1
-                    : degreeSequence2;
+                std::vector<int> minimalDegreeSequence(degreeSequence1.size());
 
-                auto minDegreeSequence = degreeSequence1[0] > degreeSequence2[0]
-                    ? degreeSequence2
-                    : degreeSequence1;
-
-                // Compare degree sequences
-                bool canCover = true;
-                for (int j = 0; j < minDegreeSequence.size(); ++j) {
-                    // If the degree of the vertex in the first graph is greater than the degree of the vertex in the second graph
-                    // then the first graph cannot cover the second graph
-                    if (minDegreeSequence[j].second > maxDegreeSequence[j].second) {
-                        canCover = false;
-                        break;
-                    }
+                for (int i = 0; i < degreeSequence1.size(); ++i) {
+                    minimalDegreeSequence[i] = std::min(degreeSequence1[i].second, degreeSequence2[i].second);
                 }
 
-                if (canCover) {
-                    // Compare by vertices
-                    if (selection1.size() > currentMaximalCommonSubmultigraphSize.first) {
-                        currentMaximalCommonSubmultigraphSize = {selection1.size(), selection2.size()};
-                        currentMaximalCommonSubmultigraph = {selection1, selection2};
-                    }
+                MultigraphSize minimalDegreeSequenceMultigraphSize = {
+                    minimalDegreeSequence.size(),
+                    std::accumulate(minimalDegreeSequence.begin(), minimalDegreeSequence.end(), 0)
+                };
 
-                    // Compare by edges
-                    if (selection1.size() == currentMaximalCommonSubmultigraphSize.first && selection2.size() > currentMaximalCommonSubmultigraphSize.second) {
-                        currentMaximalCommonSubmultigraphSize = {selection1.size(), selection2.size()};
-                        currentMaximalCommonSubmultigraph = {selection1, selection2};
-                    }
+                if (compareSize(minimalDegreeSequenceMultigraphSize, currentMaximalCommonSubmultigraphSize) == 1) {
+                    currentMaximalCommonSubmultigraphSize = minimalDegreeSequenceMultigraphSize;
+                    currentMaximalCommonSubmultigraph = {selection1, selection2};
                 }
             }
         }

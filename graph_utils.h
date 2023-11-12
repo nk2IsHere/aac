@@ -60,6 +60,10 @@ MultigraphSize size(MultigraphAdjacencyMatrix multigraph) {
 // 1. compare number of vertices
 // 2. if equal, compare number of edges
 // 3. if equal, return 0
+//
+// Return 1 if size1 > size2
+// Return -1 if size1 < size2
+// Return 0 if size1 == size2
 int compareSize(MultigraphSize size1, MultigraphSize size2) {
     auto [vertices1, edges1] = size1;
     auto [vertices2, edges2] = size2;
@@ -82,6 +86,7 @@ int compareSize(MultigraphSize size1, MultigraphSize size2) {
 
     return 0;
 }
+
 
 std::vector<std::pair<int, int>> degreeSequence(const MultigraphAdjacencyMatrix &multigraph) {
     // Time complexity: O(V^2)
