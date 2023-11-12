@@ -85,8 +85,18 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
 
                 std::vector<int> minimalDegreeSequence(degreeSequence1.size());
 
-                for (int i = 0; i < degreeSequence1.size(); ++i) {
-                    minimalDegreeSequence[i] = std::min(degreeSequence1[i].second, degreeSequence2[i].second);
+                for (int j = 0; j < degreeSequence1.size(); ++j) {
+                    minimalDegreeSequence[j] = std::min(degreeSequence1[j].second, degreeSequence2[j].second);
+
+                    // If the minimal degree sequence is 0, then the submultigraphs are not isomorphic at all
+                    if (minimalDegreeSequence[j] == 0) {
+                        minimalDegreeSequence.clear();
+                        break;
+                    }
+                }
+
+                if (minimalDegreeSequence.empty()) {
+                    continue;
                 }
 
                 MultigraphSize minimalDegreeSequenceMultigraphSize = {
