@@ -10,6 +10,7 @@
 #include "graph_solution_3_polynomial_approximation.h"
 #include "graph_solution_4.h"
 #include "graph_solution_4_polynomial_approximation.h"
+#include "multigraph_generator.h"
 
 const std::string INPUT_FILE_NAME_1 = "mgraph1.txt";
 const std::string INPUT_FILE_NAME_2 = "mgraph2.txt";
@@ -22,16 +23,27 @@ const std::string INPUT_FILE_NAME_3 = "mgraph3.txt";
 //	4. maximal common subgraph (of two multigraphs)
 
 std::pair<int, MultigraphAdjacencyMatrix> readGraphFromFile(const std::string& filename) {
-    std::ifstream input_file(filename);
-    if (!input_file.is_open()) {
-        std::cout << "Error: cannot open file " << INPUT_FILE_NAME_1 << std::endl;
+    std::ifstream inputFile(filename);
+    if (!inputFile.is_open()) {
+        std::cout << "Error: cannot open file " << filename << std::endl;
         throw std::runtime_error("Cannot open file");
     }
 
-    auto [numberOfVertices, multigraph] = readGraph(input_file);
-    input_file.close();
+    auto [numberOfVertices, multigraph] = readGraph(inputFile);
+    inputFile.close();
 
     return {numberOfVertices, multigraph};
+}
+
+void writeGraphToFile(const std::string& filename, const MultigraphAdjacencyMatrix& multigraph) {
+    std::ofstream outputFile(filename);
+    if (!outputFile.is_open()) {
+        std::cout << "Error: cannot open file " << filename << std::endl;
+        throw std::runtime_error("Cannot open file");
+    }
+
+    writeGraph(outputFile, multigraph);
+    outputFile.close();
 }
 
 int main() {
@@ -79,6 +91,20 @@ int main() {
         std::cout << vertex << " ";
     }
     std::cout << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "Running maximal common submultigraph polynomial approximation: " << std::endl;
+    auto [selection1PolynomialApproximation, selection2PolynomialApproximation] = maximalCommonSubmultigraphPolynomialApproximation(multigraph2, multigraph3);
+    std::cout << "Maximal common submultigraph polynomial approximation: " << std::endl;
+    std::cout << "Selection 1: ";
+    for (const auto vertex: selection1PolynomialApproximation) {
+        std::cout << vertex << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Selection 2: ";
+    for (const auto vertex: selection2PolynomialApproximation) {
+        std::cout << vertex << " ";
+    }
     std::cout << std::endl;
 
     return 0;

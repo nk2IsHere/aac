@@ -51,6 +51,7 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomi
     MultigraphAdjacencyMatrix multigraph2
 ) {
     // Time complexity: O(V^3 * V^2)
+    // Outer while loop: The outer loop continues until no improvements can be made. In the worst case, this can take O(V) iterations.
 
     std::vector<int> selection1;
     std::vector<int> selection2;
@@ -60,7 +61,10 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomi
 
     // Loop until no improvement is made
     while (graphEditDistanceHasImproved) {
+//        std::cout << "iter\n";
+
         graphEditDistanceHasImproved = false;
+        int maxVertexCount = selection1.size();
         std::pair<int, int> bestVertexPair = {-1, -1};
         int bestVertexPairGraphEditDistance = minimalCurrentGraphEditDistance;
 
@@ -74,11 +78,16 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraphPolynomi
                 auto newSubmultigraph1 = makeSubmultigraphFromSelection(multigraph1, selection1, i);
                 auto newSubmultigraph2 = makeSubmultigraphFromSelection(multigraph2, selection2, j);
 
+//                std::cout << newSubmultigraph1.size() << " " << newSubmultigraph2.size() << std::endl;
+
                 // Calculate the approximated GED for the new submultigraphs
                 int currentVertexPairGraphEditDistance = graphEditDistancePolynomialApproximation(newSubmultigraph1, newSubmultigraph2);
 
                 // Check if the current GED is better and update if necessary
-                if (currentVertexPairGraphEditDistance < bestVertexPairGraphEditDistance) {
+                if (
+                    currentVertexPairGraphEditDistance < bestVertexPairGraphEditDistance
+                    || (currentVertexPairGraphEditDistance == bestVertexPairGraphEditDistance && newSubmultigraph1.size() > maxVertexCount)
+                ) {
                     bestVertexPairGraphEditDistance = currentVertexPairGraphEditDistance;
                     bestVertexPair = {i, j};
                     graphEditDistanceHasImproved = true;

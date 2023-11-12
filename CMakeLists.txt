@@ -11,4 +11,5 @@ add_executable(aac_laboratories main.cpp
         graph_solution_4.h
         graph_solution_2_polynomial_approximation.h
         graph_solution_3_polynomial_approximation.h
-        graph_solution_4_polynomial_approximation.h)
+        graph_solution_4_polynomial_approximation.h
+        multigraph_generator.h)

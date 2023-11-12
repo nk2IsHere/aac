@@ -6,33 +6,33 @@ typedef std::vector<std::vector<int>> MultigraphAdjacencyMatrix;
 typedef std::pair<int, int> MultigraphSize;
 typedef std::pair<int, int> CompleteMultigraph;
 
-std::pair<int, MultigraphAdjacencyMatrix> readGraph(std::ifstream& input_file) {
+std::pair<int, MultigraphAdjacencyMatrix> readGraph(std::ifstream& inputFile) {
     // Read the number of vertices
-    int num_vertices;
-    input_file >> num_vertices;
-    std::cout << "Number of vertices: " << num_vertices << std::endl;
+    int numVertices;
+    inputFile >> numVertices;
+    std::cout << "Number of vertices: " << numVertices << std::endl;
 
-    std::vector<std::vector<int>> adjacencyMatrix(num_vertices, std::vector<int>(num_vertices));
+    std::vector<std::vector<int>> adjacencyMatrix(numVertices, std::vector<int>(numVertices));
 
     // Read the adjacency matrix
-    for (int i = 0; i < num_vertices; ++i) {
-        for (int j = 0; j < num_vertices; ++j) {
-            input_file >> adjacencyMatrix[i][j];
+    for (int i = 0; i < numVertices; ++i) {
+        for (int j = 0; j < numVertices; ++j) {
+            inputFile >> adjacencyMatrix[i][j];
         }
     }
 
     // Print the adjacency matrix
     std::cout << "Adjacency matrix:" << std::endl;
-    for (int i = 0; i < num_vertices; ++i) {
-        for (int j = 0; j < num_vertices; ++j) {
+    for (int i = 0; i < numVertices; ++i) {
+        for (int j = 0; j < numVertices; ++j) {
             std::cout << adjacencyMatrix[i][j] << " ";
         }
         std::cout << std::endl;
     }
 
     return {
-            num_vertices,
-            adjacencyMatrix
+        numVertices,
+        adjacencyMatrix
     };
 }
 
@@ -41,18 +41,18 @@ std::pair<int, MultigraphAdjacencyMatrix> readGraph(std::ifstream& input_file) {
 MultigraphSize size(MultigraphAdjacencyMatrix multigraph) {
     // Time complexity: O(V^2)
 
-    int num_vertices = multigraph.size();
-    int num_edges = 0;
+    int numVertices = multigraph.size();
+    int numEdges = 0;
 
-    for (int i = 0; i < num_vertices; ++i) {
-        for (int j = i; j < num_vertices; ++j) {
-            num_edges += multigraph[i][j];
+    for (int i = 0; i < numVertices; ++i) {
+        for (int j = i; j < numVertices; ++j) {
+            numEdges += multigraph[i][j];
         }
     }
 
     return {
-            num_vertices,
-            num_edges
+        numVertices,
+        numEdges
     };
 }
 
@@ -108,6 +108,20 @@ std::vector<std::pair<int, int>> degreeSequence(const MultigraphAdjacencyMatrix 
     });
 
     return degreeSequence;
+}
+
+void writeGraph(std::ofstream& outputFile, const MultigraphAdjacencyMatrix& multigraph) {
+    // Write the number of vertices
+    int num_vertices = multigraph.size();
+    outputFile << num_vertices << std::endl;
+
+    // Write the adjacency matrix
+    for (int i = 0; i < num_vertices; ++i) {
+        for (int j = 0; j < num_vertices; ++j) {
+            outputFile << multigraph[i][j] << " ";
+        }
+        outputFile << std::endl;
+    }
 }
 
 #endif //AAC_LABORATORIES_GRAPH_UTILS_H
