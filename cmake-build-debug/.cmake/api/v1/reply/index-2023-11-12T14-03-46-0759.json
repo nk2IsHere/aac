@@ -8,10 +8,10 @@
 		},
 		"paths" : 
 		{
-			"cmake" : "/Users/nk2/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/232.9921.42/CLion.app/Contents/bin/cmake/mac/bin/cmake",
-			"cpack" : "/Users/nk2/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/232.9921.42/CLion.app/Contents/bin/cmake/mac/bin/cpack",
-			"ctest" : "/Users/nk2/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/232.9921.42/CLion.app/Contents/bin/cmake/mac/bin/ctest",
-			"root" : "/Users/nk2/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/232.9921.42/CLion.app/Contents/bin/cmake/mac/share/cmake-3.26"
+			"cmake" : "/Users/nk2/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake",
+			"cpack" : "/Users/nk2/Applications/CLion.app/Contents/bin/cmake/mac/bin/cpack",
+			"ctest" : "/Users/nk2/Applications/CLion.app/Contents/bin/cmake/mac/bin/ctest",
+			"root" : "/Users/nk2/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.26"
 		},
 		"version" : 
 		{
@@ -35,7 +35,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cache-v2-f69bb905608553a9ae52.json",
+			"jsonFile" : "cache-v2-20588ffd967bf5f8c001.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -44,7 +44,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cmakeFiles-v1-55bfc98e4964b642ed0c.json",
+			"jsonFile" : "cmakeFiles-v1-bf0e2df31bbd164da4f3.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -66,7 +66,7 @@
 	{
 		"cache-v2" : 
 		{
-			"jsonFile" : "cache-v2-f69bb905608553a9ae52.json",
+			"jsonFile" : "cache-v2-20588ffd967bf5f8c001.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -76,7 +76,7 @@
 		},
 		"cmakeFiles-v1" : 
 		{
-			"jsonFile" : "cmakeFiles-v1-55bfc98e4964b642ed0c.json",
+			"jsonFile" : "cmakeFiles-v1-bf0e2df31bbd164da4f3.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{

@@ -60,6 +60,7 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 MultigraphAdjacencyMatrix submultigraph1 = makeSubmultigraphFromSelection(multigraph1, selection1);
                 MultigraphAdjacencyMatrix submultigraph2 = makeSubmultigraphFromSelection(multigraph2, selection2);
 
+                // If GED is 0, then the submultigraphs are isomorphic
                 if (graphEditDistance(submultigraph1, submultigraph2) == 0) {
                     // Compare by vertices
                     if(selection1.size() > currentMaximalCommonSubmultigraphSize.first) {
@@ -69,6 +70,44 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
 
                     // Compare by edges
                     if(selection1.size() == currentMaximalCommonSubmultigraphSize.first && selection2.size() > currentMaximalCommonSubmultigraphSize.second) {
+                        currentMaximalCommonSubmultigraphSize = {selection1.size(), selection2.size()};
+                        currentMaximalCommonSubmultigraph = {selection1, selection2};
+                    }
+                }
+
+                // If GED is not 0 we can still look for the maximal common submultigraph where one graph
+                // can cover the other using edges
+                auto degreeSequence1 = degreeSequence(submultigraph1);
+                auto degreeSequence2 = degreeSequence(submultigraph2);
+
+                auto maxDegreeSequence = degreeSequence1[0] > degreeSequence2[0]
+                    ? degreeSequence1
+                    : degreeSequence2;
+
+                auto minDegreeSequence = degreeSequence1[0] > degreeSequence2[0]
+                    ? degreeSequence2
+                    : degreeSequence1;
+
+                // Compare degree sequences
+                bool canCover = true;
+                for (int j = 0; j < minDegreeSequence.size(); ++j) {
+                    // If the degree of the vertex in the first graph is greater than the degree of the vertex in the second graph
+                    // then the first graph cannot cover the second graph
+                    if (minDegreeSequence[j].second > maxDegreeSequence[j].second) {
+                        canCover = false;
+                        break;
+                    }
+                }
+
+                if (canCover) {
+                    // Compare by vertices
+                    if (selection1.size() > currentMaximalCommonSubmultigraphSize.first) {
+                        currentMaximalCommonSubmultigraphSize = {selection1.size(), selection2.size()};
+                        currentMaximalCommonSubmultigraph = {selection1, selection2};
+                    }
+
+                    // Compare by edges
+                    if (selection1.size() == currentMaximalCommonSubmultigraphSize.first && selection2.size() > currentMaximalCommonSubmultigraphSize.second) {
                         currentMaximalCommonSubmultigraphSize = {selection1.size(), selection2.size()};
                         currentMaximalCommonSubmultigraph = {selection1, selection2};
                     }
