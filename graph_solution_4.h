@@ -24,13 +24,13 @@ MultigraphAdjacencyMatrix makeSubmultigraphFromSelection(const MultigraphAdjacen
 }
 
 std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(MultigraphAdjacencyMatrix multigraph1, MultigraphAdjacencyMatrix multigraph2) {
-    auto [numVertices1, numEdges1] = size(multigraph1);
-    auto [numVertices2, numEdges2] = size(multigraph2);
+    auto size1 = size(multigraph1);
+    auto size2 = size(multigraph2);
 
-    int minNumVertices = std::min(numVertices1, numVertices2);
+    int minNumVertices = std::min(size1.numVertices, size2.numVertices);
 
     // For all possible selections of vertices from 2 to numVertices1
-    std::vector<std::vector<int>> vectorSelections1 = enumerateAllPossibleSelectionsFromNtoM(0, numVertices1 - 1, 2);
+    std::vector<std::vector<int>> vectorSelections1 = enumerateAllPossibleSelectionsFromNtoM(0, size1.numVertices - 1, 2);
     // Group selections by size
     std::vector<std::vector<std::vector<int>>> groupedSelections1(minNumVertices + 1);
     for (auto& selection : vectorSelections1) {
@@ -38,7 +38,7 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
     }
 
     // For all possible selections of vertices from 2 to numVertices2
-    std::vector<std::vector<int>> vectorSelections2 = enumerateAllPossibleSelectionsFromNtoM(0, numVertices2 - 1, 2);
+    std::vector<std::vector<int>> vectorSelections2 = enumerateAllPossibleSelectionsFromNtoM(0, size2.numVertices - 1, 2);
     // Group selections by size
     std::vector<std::vector<std::vector<int>>> groupedSelections2(minNumVertices + 1);
     for (auto& selection : vectorSelections2) {
@@ -49,7 +49,7 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
     std::pair<std::vector<int>, std::vector<int>> currentMaximalCommonSubmultigraph;
 
     for(int i = minNumVertices - 1; i >= 0; --i) {
-        if (currentMaximalCommonSubmultigraphSize.first > i) {
+        if (currentMaximalCommonSubmultigraphSize.numVertices > i) {
             break;
         }
 
@@ -100,8 +100,8 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 }
 
                 MultigraphSize minimalDegreeSequenceMultigraphSize = {
-                    minimalDegreeSequence.size(),
-                    std::accumulate(minimalDegreeSequence.begin(), minimalDegreeSequence.end(), 0)
+                    .numVertices = (int)minimalDegreeSequence.size(),
+                    .numEdges = std::accumulate(minimalDegreeSequence.begin(), minimalDegreeSequence.end(), 0)
                 };
 
                 if (compareSize(minimalDegreeSequenceMultigraphSize, currentMaximalCommonSubmultigraphSize) == 1) {

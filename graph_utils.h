@@ -3,10 +3,23 @@
 #define AAC_LABORATORIES_GRAPH_UTILS_H
 
 typedef std::vector<std::vector<int>> MultigraphAdjacencyMatrix;
-typedef std::pair<int, int> MultigraphSize;
-typedef std::pair<int, int> CompleteMultigraph;
 
-std::pair<int, MultigraphAdjacencyMatrix> readGraph(std::ifstream& inputFile) {
+struct MultigraphSize {
+    int numVertices;
+    int numEdges;
+};
+
+struct CompleteMultigraph {
+    int alpha;
+    int n;
+};
+
+struct ReadGraphResult {
+    int numVertices;
+    MultigraphAdjacencyMatrix multigraph;
+};
+
+ReadGraphResult readGraph(std::ifstream& inputFile) {
     // Read the number of vertices
     int numVertices;
     inputFile >> numVertices;
@@ -31,8 +44,8 @@ std::pair<int, MultigraphAdjacencyMatrix> readGraph(std::ifstream& inputFile) {
     }
 
     return {
-        numVertices,
-        adjacencyMatrix
+        .numVertices = numVertices,
+        .multigraph = adjacencyMatrix
     };
 }
 
@@ -51,8 +64,8 @@ MultigraphSize size(MultigraphAdjacencyMatrix multigraph) {
     }
 
     return {
-        numVertices,
-        numEdges
+        .numVertices = numVertices,
+        .numEdges = numEdges
     };
 }
 
@@ -65,22 +78,20 @@ MultigraphSize size(MultigraphAdjacencyMatrix multigraph) {
 // Return -1 if size1 < size2
 // Return 0 if size1 == size2
 int compareSize(MultigraphSize size1, MultigraphSize size2) {
-    auto [vertices1, edges1] = size1;
-    auto [vertices2, edges2] = size2;
 
-    if (vertices1 > vertices2) {
+    if (size1.numVertices > size2.numVertices) {
         return 1;
     }
 
-    if (vertices1 < vertices2) {
+    if (size1.numVertices < size2.numVertices) {
         return -1;
     }
 
-    if (edges1 > edges2) {
+    if (size1.numEdges > size2.numEdges) {
         return 1;
     }
 
-    if (edges1 < edges2) {
+    if (size1.numEdges < size2.numEdges) {
         return -1;
     }
 
@@ -125,17 +136,17 @@ void writeGraph(std::ofstream& outputFile, const MultigraphAdjacencyMatrix& mult
 }
 
 
-std::pair<int, MultigraphAdjacencyMatrix> readGraphFromFile(const std::string& filename) {
+ReadGraphResult readGraphFromFile(const std::string& filename) {
     std::ifstream inputFile(filename);
     if (!inputFile.is_open()) {
         std::cout << "Error: cannot open file " << filename << std::endl;
         throw std::runtime_error("Cannot open file");
     }
 
-    auto [numberOfVertices, multigraph] = readGraph(inputFile);
+    auto readGraphResult = readGraph(inputFile);
     inputFile.close();
 
-    return {numberOfVertices, multigraph};
+    return readGraphResult;
 }
 
 void writeGraphToFile(const std::string& filename, const MultigraphAdjacencyMatrix& multigraph) {

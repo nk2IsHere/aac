@@ -46,8 +46,8 @@ CompleteMultigraph maximalCliqueForSingleVertexGreedy(const MultigraphAdjacencyM
 
     int alpha = minimalAmountOfConnectionsBetweenVerticesInCompleteMultigraph(multigraph, clique);
     return {
-        alpha,
-        clique.size()
+        .alpha = alpha,
+        .n = (int)clique.size()
     };
 }
 
@@ -55,18 +55,18 @@ CompleteMultigraph maximalCliqueForSingleVertexGreedy(const MultigraphAdjacencyM
 CompleteMultigraph maximalCliquePolynomialApproximation(const MultigraphAdjacencyMatrix& multigraph) {
     // Time complexity: O(V^3)
 
-    auto [numVertices, numEdges] = size(multigraph);
+    auto multigraphSize = size(multigraph);
 
     // Find the largest clique for each vertex
     // and return the largest one
 
     CompleteMultigraph largestCompleteMultigraph = {0, 0};
-    for (int i = 0; i < numVertices; i++) {
+    for (int i = 0; i < multigraphSize.numVertices; i++) {
         CompleteMultigraph currentCompleteMultigraph = maximalCliqueForSingleVertexGreedy(multigraph, i);
-        if (currentCompleteMultigraph.first > largestCompleteMultigraph.first) {
+        if (currentCompleteMultigraph.n > largestCompleteMultigraph.n) {
             largestCompleteMultigraph = currentCompleteMultigraph;
         }
-        if(currentCompleteMultigraph.first == largestCompleteMultigraph.first && currentCompleteMultigraph.second > largestCompleteMultigraph.second) {
+        if(currentCompleteMultigraph.n == largestCompleteMultigraph.n && currentCompleteMultigraph.alpha > largestCompleteMultigraph.alpha) {
             largestCompleteMultigraph = currentCompleteMultigraph;
         }
     }

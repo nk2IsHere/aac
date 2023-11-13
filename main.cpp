@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <set>
 
 #include "library/clipp.h"
+#include "library/termcolor.h"
 #include "graph_utils.h"
 #include "graph_solution_2.h"
 #include "graph_solution_2_polynomial_approximation.h"
@@ -18,6 +20,41 @@
 //	2. distance function (metric), metric space - in the space of multigraphs define a function that is a metric (satisties axioms)
 //	3. maximal clique (brute force algo [exp complexity] and its approximation [polynomial complexity])
 //	4. maximal common subgraph (of two multigraphs)
+
+void renderSelectionOnMultigraph(const MultigraphAdjacencyMatrix& multigraph, const std::vector<int>& selection) {
+    auto selectionInSet = std::set<int>(selection.begin(), selection.end());
+
+    std::cout << "Vertices: " << std::endl;
+    for (int i = 0; i < multigraph.size(); ++i) {
+        if (selectionInSet.find(i) != selectionInSet.end()) {
+            std::cout << termcolor::on_bright_white << termcolor::color<0, 0, 0> << i << termcolor::reset;
+        } else {
+            std::cout << i;
+        }
+        std::cout << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Adjacency matrix: " << std::endl;
+    for (int i = 0; i < multigraph.size(); ++i) {
+        for (int j = 0; j < multigraph.size(); ++j) {
+            if (
+                i != j
+                && selectionInSet.find(i) != selectionInSet.end()
+                && selectionInSet.find(j) != selectionInSet.end()
+            ) {
+                std::cout << termcolor::on_bright_white << termcolor::color<0, 0, 0> << multigraph[i][j] << termcolor::reset;
+            } /*else if(i == j) {
+                std::cout << termcolor::on_color<0, 0, 0> << termcolor::color<0, 0, 0> << multigraph[i][j] << termcolor::reset;
+            } */ else {
+                std::cout << multigraph[i][j];
+            }
+            std::cout << " ";
+
+        }
+        std::cout << std::endl;
+    }
+}
 
 enum class AlgorithmToRun {
     GenerateMultigraph,
@@ -47,7 +84,6 @@ int main(int argc, char* argv[]) {
     std::string filename1;
     std::string filename2;
 
-
     auto generateMultigraphRunner = [](const std::string& filenamePrefix, int graphCount, int numVertices, int numEdges) -> AlgorithmRunResult {
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < graphCount; ++i) {
@@ -70,13 +106,13 @@ int main(int argc, char* argv[]) {
     );
 
     auto maximalCliqueBruteforceRunner = [](const std::string& filename) -> AlgorithmRunResult {
-        auto [numberOfVertices, multigraph] = readGraphFromFile(filename);
+        auto readGraphResult = readGraphFromFile(filename);
 
         auto start = std::chrono::high_resolution_clock::now();
-        auto [alphaBruteforce, nBruteforce] = maximalCliqueBruteforce(multigraph);
+        auto completeMultigraph = maximalCliqueBruteforce(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique bruteforce: " << alphaBruteforce << "K" << nBruteforce << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
@@ -88,13 +124,13 @@ int main(int argc, char* argv[]) {
     );
 
     auto maximalCliqueBruteforceOptimizedRunner = [](const std::string& filename) -> AlgorithmRunResult {
-        auto [numberOfVertices, multigraph] = readGraphFromFile(filename);
+        auto readGraphResult = readGraphFromFile(filename);
 
         auto start = std::chrono::high_resolution_clock::now();
-        auto [alphaBruteforceOptimized, nBruteforceOptimized] = maximalCliqueBruteforceOptimized(multigraph);
+        auto completeMultigraph = maximalCliqueBruteforceOptimized(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique bruteforce optimized: " << alphaBruteforceOptimized << "K" << nBruteforceOptimized << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
@@ -106,13 +142,13 @@ int main(int argc, char* argv[]) {
     );
 
     auto maximalCliquePolynomialApproximationRunner = [](const std::string& filename) -> AlgorithmRunResult {
-        auto [numberOfVertices, multigraph] = readGraphFromFile(filename);
+        auto readGraphResult = readGraphFromFile(filename);
 
         auto start = std::chrono::high_resolution_clock::now();
-        auto [alphaPolynomialApproximation, nPolynomialApproximation] = maximalCliquePolynomialApproximation(multigraph);
+        auto completeMultigraph = maximalCliquePolynomialApproximation(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique polynomial approximation: " << alphaPolynomialApproximation << "K" << nPolynomialApproximation << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
@@ -124,14 +160,14 @@ int main(int argc, char* argv[]) {
     );
 
     auto graphEditDistanceRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto [numberOfVertices1, multigraph1] = readGraphFromFile(filename1);
-        auto [numberOfVertices2, multigraph2] = readGraphFromFile(filename2);
+        auto readGraphResult1 = readGraphFromFile(filename1);
+        auto readGraphResult2 = readGraphFromFile(filename2);
 
         auto start = std::chrono::high_resolution_clock::now();
-        int graphEditDistanceResult = graphEditDistance(multigraph1, multigraph2);
+        int graphEditDistanceResult = graphEditDistance(readGraphResult1.multigraph, readGraphResult2.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Graph edit distance: " << graphEditDistanceResult << std::endl;
+        std::cout << "Graph edit distance: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << graphEditDistanceResult << termcolor::reset << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
@@ -144,14 +180,14 @@ int main(int argc, char* argv[]) {
     );
 
     auto graphEditDistancePolynomialApproximationRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto [numberOfVertices1, multigraph1] = readGraphFromFile(filename1);
-        auto [numberOfVertices2, multigraph2] = readGraphFromFile(filename2);
+        auto readGraphResult1 = readGraphFromFile(filename1);
+        auto readGraphResult2 = readGraphFromFile(filename2);
 
         auto start = std::chrono::high_resolution_clock::now();
-        int graphEditDistancePolynomialApproximationResult = graphEditDistancePolynomialApproximation(multigraph1, multigraph2);
+        int graphEditDistancePolynomialApproximationResult = graphEditDistancePolynomialApproximation(readGraphResult1.multigraph, readGraphResult2.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Graph edit distance polynomial approximation: " << graphEditDistancePolynomialApproximationResult << std::endl;
+        std::cout << "Graph edit distance: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << graphEditDistancePolynomialApproximationResult << termcolor::reset << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
@@ -164,23 +200,19 @@ int main(int argc, char* argv[]) {
     );
 
     auto maximalCommonSubmultigraphRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto [numberOfVertices1, multigraph1] = readGraphFromFile(filename1);
-        auto [numberOfVertices2, multigraph2] = readGraphFromFile(filename2);
+        auto readGraphResult1 = readGraphFromFile(filename1);
+        auto readGraphResult2 = readGraphFromFile(filename2);
 
         auto start = std::chrono::high_resolution_clock::now();
-        auto [selection1, selection2] = maximalCommonSubmultigraph(multigraph1, multigraph2);
+        auto selections = maximalCommonSubmultigraph(readGraphResult1.multigraph, readGraphResult2.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
         std::cout << "Maximal common submultigraph: " << std::endl;
-        std::cout << "Selection 1: ";
-        for (const auto vertex: selection1) {
-            std::cout << vertex << " ";
-        }
+        std::cout << "Selection from Graph 1: " << std::endl;
+        renderSelectionOnMultigraph(readGraphResult1.multigraph, selections.first);
         std::cout << std::endl;
-        std::cout << "Selection 2: ";
-        for (const auto vertex: selection2) {
-            std::cout << vertex << " ";
-        }
+        std::cout << "Selection from Graph 2: " << std::endl;
+        renderSelectionOnMultigraph(readGraphResult2.multigraph, selections.second);
         std::cout << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
@@ -194,23 +226,19 @@ int main(int argc, char* argv[]) {
     );
 
     auto maximalCommonSubmultigraphPolynomialApproximationRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto [numberOfVertices1, multigraph1] = readGraphFromFile(filename1);
-        auto [numberOfVertices2, multigraph2] = readGraphFromFile(filename2);
+        auto readGraphResult1 = readGraphFromFile(filename1);
+        auto readGraphResult2 = readGraphFromFile(filename2);
 
         auto start = std::chrono::high_resolution_clock::now();
-        auto [selection1PolynomialApproximation, selection2PolynomialApproximation] = maximalCommonSubmultigraphPolynomialApproximation(multigraph1, multigraph2);
+        auto selections = maximalCommonSubmultigraphPolynomialApproximation(readGraphResult1.multigraph, readGraphResult2.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal common submultigraph polynomial approximation: " << std::endl;
-        std::cout << "Selection 1: ";
-        for (const auto vertex: selection1PolynomialApproximation) {
-            std::cout << vertex << " ";
-        }
+        std::cout << "Maximal common submultigraph: " << std::endl;
+        std::cout << "Selection from Graph 1: " << std::endl;
+        renderSelectionOnMultigraph(readGraphResult1.multigraph, selections.first);
         std::cout << std::endl;
-        std::cout << "Selection 2: ";
-        for (const auto vertex: selection2PolynomialApproximation) {
-            std::cout << vertex << " ";
-        }
+        std::cout << "Selection from Graph 2: " << std::endl;
+        renderSelectionOnMultigraph(readGraphResult2.multigraph, selections.second);
         std::cout << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
@@ -224,23 +252,19 @@ int main(int argc, char* argv[]) {
     );
 
     auto maximalCommonSubmultigraphPolynomialApproximationImprovedSearchRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto [numberOfVertices1, multigraph1] = readGraphFromFile(filename1);
-        auto [numberOfVertices2, multigraph2] = readGraphFromFile(filename2);
+        auto readGraphResult1 = readGraphFromFile(filename1);
+        auto readGraphResult2 = readGraphFromFile(filename2);
 
         auto start = std::chrono::high_resolution_clock::now();
-        auto [selection1PolynomialApproximationImproved, selection2PolynomialApproximationImproved] = maximalCommonSubmultigraphPolynomialApproximationImprovedSearch(multigraph1, multigraph2);
+        auto selections = maximalCommonSubmultigraphPolynomialApproximationImprovedSearch(readGraphResult1.multigraph, readGraphResult2.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal common submultigraph polynomial approximation improved: " << std::endl;
-        std::cout << "Selection 1: ";
-        for (const auto vertex: selection1PolynomialApproximationImproved) {
-            std::cout << vertex << " ";
-        }
+        std::cout << "Maximal common submultigraph: " << std::endl;
+        std::cout << "Selection from Graph 1: " << std::endl;
+        renderSelectionOnMultigraph(readGraphResult1.multigraph, selections.first);
         std::cout << std::endl;
-        std::cout << "Selection 2: ";
-        for (const auto vertex: selection2PolynomialApproximationImproved) {
-            std::cout << vertex << " ";
-        }
+        std::cout << "Selection from Graph 2: " << std::endl;
+        renderSelectionOnMultigraph(readGraphResult2.multigraph, selections.second);
         std::cout << std::endl;
         return {
             .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()

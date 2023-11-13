@@ -13,4 +13,5 @@ add_executable(aac_laboratories main.cpp
         graph_solution_3_polynomial_approximation.h
         graph_solution_4_polynomial_approximation.h
         multigraph_generator.h
-        library/clipp.h)
+        library/clipp.h
+        library/termcolor.h)

@@ -60,11 +60,11 @@ CompleteMultigraph maximalCliqueBruteforce(const MultigraphAdjacencyMatrix& mult
 
     // Time complexity: O(2^|V| * |V|^2)
 
-    auto [numVertices, numEdges] = size(multigraph);
+    auto multigraphSize = size(multigraph);
 
     // Alpha, n
     CompleteMultigraph largestCompleteMultigraph = {0, 0};
-    for(const auto& selection: enumerateAllPossibleSelectionsFromNtoM(0, numVertices - 1, 2)) {
+    for(const auto& selection: enumerateAllPossibleSelectionsFromNtoM(0, multigraphSize.numVertices - 1, 2)) {
         if(isSetOfVerticesFormCompleteMultigraph(multigraph, selection)) {
 //            std::cout << "Found complete multigraph: ";
 //            for (const auto vertex: selection) {
@@ -76,11 +76,11 @@ CompleteMultigraph maximalCliqueBruteforce(const MultigraphAdjacencyMatrix& mult
             int n = selection.size();
 
 //            std::cout << "This is a " << alpha << "K" << n << " graph" << std::endl;
-            if (n > largestCompleteMultigraph.second) {
+            if (n > largestCompleteMultigraph.n) {
                 largestCompleteMultigraph = {alpha, n};
             }
 
-            if (n == largestCompleteMultigraph.second && alpha > largestCompleteMultigraph.first) {
+            if (n == largestCompleteMultigraph.n && alpha > largestCompleteMultigraph.alpha) {
                 largestCompleteMultigraph = {alpha, n};
             }
         }

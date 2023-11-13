@@ -14,16 +14,16 @@ CompleteMultigraph maximalCliqueBruteforceOptimized(const MultigraphAdjacencyMat
     // Time complexity: O(2^|V|)
 
     // Start with the largest possible bitset
-    auto [num_vertices, num_edges] = size(multigraph);
+    auto multigraphSize = size(multigraph);
 
     int enumerateFrom = 0;
-    int enumerateTo = num_vertices - 1;
+    int enumerateTo = multigraphSize.numVertices - 1;
 
     int totalElements = enumerateTo - enumerateFrom + 1;
     int minimalSize = 2; // Minimal size of a complete multigraph
     int currentCompleteGraphSize = 0; // Current size of the complete multigraph
 
-    CompleteMultigraph largest_complete_multigraph = {0, 0};
+    CompleteMultigraph largestCompleteMultigraph = {0, 0};
 
     // Iterate over all possible bitsets starting from the largest one.
     // Iterating from the largest one is important, because we want to find the largest complete multigraph
@@ -69,18 +69,18 @@ CompleteMultigraph maximalCliqueBruteforceOptimized(const MultigraphAdjacencyMat
         int n = currentSelection.size();
 
 //        std::cout << "This is a " << alpha << "K" << n << " graph" << std::endl;
-        if (n > largest_complete_multigraph.second) {
-            largest_complete_multigraph = {alpha, n};
+        if (n > largestCompleteMultigraph.n) {
+            largestCompleteMultigraph = {alpha, n};
         }
 
-        if (n == largest_complete_multigraph.second && alpha > largest_complete_multigraph.first) {
-            largest_complete_multigraph = {alpha, n};
+        if (n == largestCompleteMultigraph.n && alpha > largestCompleteMultigraph.alpha) {
+            largestCompleteMultigraph = {alpha, n};
         }
 
         currentCompleteGraphSize = n;
     }
 
-    return largest_complete_multigraph;
+    return largestCompleteMultigraph;
 }
 
 #endif //AAC_LABORATORIES_GRAPH_SOLUTION_3_OPTIMIZED_BRUTEFORCE_H
