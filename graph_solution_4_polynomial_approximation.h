@@ -43,6 +43,7 @@ MultigraphAdjacencyMatrix makeSubmultigraphFromSelection(
 
             // Set the edge weight in the submultigraph
             submultigraph[i][j] = multigraph[originalVertex1][originalVertex2];
+            submultigraph[j][i] = multigraph[originalVertex1][originalVertex2];
         }
     }
 

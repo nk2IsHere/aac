@@ -28,6 +28,7 @@ MultigraphAdjacencyMatrix makeSubmultigraphFromSelection(const MultigraphAdjacen
     for (int i = 0; i < numVertices; i++) {
         for (int j = i; j < numVertices; j++) {
             submultigraph[i][j] = multigraph[selection[i]][selection[j]];
+            submultigraph[j][i] = multigraph[selection[i]][selection[j]];
         }
     }
 
@@ -59,7 +60,7 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
     MultigraphSize currentMaximalCommonSubmultigraphSize = {0, 0};
     std::pair<std::vector<int>, std::vector<int>> currentMaximalCommonSubmultigraph;
 
-    for(int i = minNumVertices - 1; i >= 0; --i) {
+    for(int i = minNumVertices; i >= 0; --i) {
         if (currentMaximalCommonSubmultigraphSize.numVertices > i) {
             break;
         }
@@ -91,6 +92,38 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 // the result will be:
                 // 5 4 3 4 1
 
+//                std::cout << "Selections: " << std::endl;
+//                std::cout << "Selection 1: ";
+//                for (auto& selection : selection1) {
+//                    std::cout << selection << " ";
+//                }
+//                std::cout << std::endl;
+//                std::cout << "Selection 2: ";
+//                for (auto& selection : selection2) {
+//                    std::cout << selection << " ";
+//                }
+//                std::cout << std::endl;
+
+
+//                // out submultigraph1
+//                std::cout << "Submultigraph 1: " << std::endl;
+//                for (auto& row : submultigraph1) {
+//                    for (auto& element : row) {
+//                        std::cout << element << " ";
+//                    }
+//                    std::cout << std::endl;
+//                }
+//                std::cout << std::endl;
+//                // out submultigraph2
+//                std::cout << "Submultigraph 2: " << std::endl;
+//                for (auto& row : submultigraph2) {
+//                    for (auto& element : row) {
+//                        std::cout << element << " ";
+//                    }
+//                    std::cout << std::endl;
+//                }
+//                std::cout << std::endl;
+
                 auto degreeSequence1 = degreeSequence(submultigraph1);
                 auto degreeSequence2 = degreeSequence(submultigraph2);
 
@@ -99,12 +132,16 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 for (int j = 0; j < degreeSequence1.size(); ++j) {
                     minimalDegreeSequence[j] = std::min(degreeSequence1[j].second, degreeSequence2[j].second);
 
+//                    std::cout << degreeSequence1[j].second << " " << degreeSequence2[j].second << " " << minimalDegreeSequence[j] << "; ";
+
                     // If the minimal degree sequence is 0, then the submultigraphs are not isomorphic at all
                     if (minimalDegreeSequence[j] == 0) {
                         minimalDegreeSequence.clear();
                         break;
                     }
                 }
+
+//                std::cout << std::endl;
 
                 if (minimalDegreeSequence.empty()) {
                     continue;
