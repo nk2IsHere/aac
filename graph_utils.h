@@ -1,8 +1,19 @@
 
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <set>
+#include <vector>
+#include <utility>
+#include <chrono>
+#include <algorithm>
+#include <random>
+#include <limits>
+
 #ifndef AAC_LABORATORIES_GRAPH_UTILS_H
 #define AAC_LABORATORIES_GRAPH_UTILS_H
 
-typedef std::vector<std::vector<int>> MultigraphAdjacencyMatrix;
+using MultigraphAdjacencyMatrix = std::vector<std::vector<int>>;
 
 struct MultigraphSize {
     int numVertices;
@@ -44,8 +55,8 @@ ReadGraphResult readGraph(std::ifstream& inputFile) {
     }
 
     return {
-        .numVertices = numVertices,
-        .multigraph = adjacencyMatrix
+        numVertices,
+        adjacencyMatrix
     };
 }
 
@@ -64,8 +75,8 @@ MultigraphSize size(MultigraphAdjacencyMatrix multigraph) {
     }
 
     return {
-        .numVertices = numVertices,
-        .numEdges = numEdges
+        numVertices,
+        numEdges
     };
 }
 

@@ -1,4 +1,17 @@
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <set>
+#include <vector>
+#include <utility>
+#include <chrono>
+#include <algorithm>
+#include <random>
+#include <limits>
+
 #include "graph_utils.h"
+#include "graph_solution_3.h"
 
 #ifndef AAC_LABORATORIES_GRAPH_SOLUTION_3_OPTIMIZED_BRUTEFORCE_H
 #define AAC_LABORATORIES_GRAPH_SOLUTION_3_OPTIMIZED_BRUTEFORCE_H

@@ -2,7 +2,18 @@
 // Created by Nikita Kozlov on 05.11.2023.
 //
 
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <set>
+#include <vector>
+#include <utility>
+#include <chrono>
+#include <algorithm>
+#include <random>
+#include <limits>
 #include <numeric>
+
 #include "graph_utils.h"
 #include "graph_solution_2.h"
 #include "graph_solution_3.h"
@@ -100,8 +111,8 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 }
 
                 MultigraphSize minimalDegreeSequenceMultigraphSize = {
-                    .numVertices = (int)minimalDegreeSequence.size(),
-                    .numEdges = std::accumulate(minimalDegreeSequence.begin(), minimalDegreeSequence.end(), 0)
+                    (int)minimalDegreeSequence.size(),
+                    std::accumulate(minimalDegreeSequence.begin(), minimalDegreeSequence.end(), 0)
                 };
 
                 if (compareSize(minimalDegreeSequenceMultigraphSize, currentMaximalCommonSubmultigraphSize) == 1) {

@@ -2,7 +2,19 @@
 // Created by Nikita Kozlov on 07.11.2023.
 //
 
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <set>
+#include <vector>
+#include <utility>
+#include <chrono>
+#include <algorithm>
+#include <random>
+#include <limits>
+
 #include "graph_utils.h"
+#include "graph_solution_3.h"
 
 #ifndef AAC_LABORATORIES_GRAPH_SOLUTION_3_POLYNOMIAL_APPROXIMATION_H
 #define AAC_LABORATORIES_GRAPH_SOLUTION_3_POLYNOMIAL_APPROXIMATION_H
@@ -46,8 +58,8 @@ CompleteMultigraph maximalCliqueForSingleVertexGreedy(const MultigraphAdjacencyM
 
     int alpha = minimalAmountOfConnectionsBetweenVerticesInCompleteMultigraph(multigraph, clique);
     return {
-        .alpha = alpha,
-        .n = (int)clique.size()
+        alpha,
+        (int)clique.size()
     };
 }
 

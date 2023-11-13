@@ -1,3 +1,6 @@
+
+#define NOMINMAX
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -32,7 +35,7 @@ void renderSelectionOnMultigraph(const MultigraphAdjacencyMatrix& multigraph, co
     std::cout << "Vertices: " << std::endl;
     for (int i = 0; i < multigraph.size(); ++i) {
         if (selectionInSet.find(i) != selectionInSet.end()) {
-            std::cout << termcolor::on_bright_white << termcolor::color<0, 0, 0> << i << termcolor::reset;
+            std::cout << termcolor::on_bright_white << termcolor::grey << i << termcolor::reset;
         } else {
             std::cout << i;
         }
@@ -48,9 +51,9 @@ void renderSelectionOnMultigraph(const MultigraphAdjacencyMatrix& multigraph, co
                 && selectionInSet.find(i) != selectionInSet.end()
                 && selectionInSet.find(j) != selectionInSet.end()
             ) {
-                std::cout << termcolor::on_bright_white << termcolor::color<0, 0, 0> << multigraph[i][j] << termcolor::reset;
+                std::cout << termcolor::on_bright_white << termcolor::grey << multigraph[i][j] << termcolor::reset;
             } /*else if(i == j) {
-                std::cout << termcolor::on_color<0, 0, 0> << termcolor::color<0, 0, 0> << multigraph[i][j] << termcolor::reset;
+                std::cout << termcolor::on_grey << termcolor::grey << multigraph[i][j] << termcolor::reset;
             } */ else {
                 std::cout << multigraph[i][j];
             }
@@ -98,7 +101,7 @@ int main(int argc, char* argv[]) {
         auto end = std::chrono::high_resolution_clock::now();
 
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
     
@@ -117,9 +120,9 @@ int main(int argc, char* argv[]) {
         auto completeMultigraph = maximalCliqueBruteforce(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
     
@@ -135,9 +138,9 @@ int main(int argc, char* argv[]) {
         auto completeMultigraph = maximalCliqueBruteforceOptimized(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
 
@@ -153,9 +156,9 @@ int main(int argc, char* argv[]) {
         auto completeMultigraph = maximalCliquePolynomialApproximation(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
 
@@ -172,9 +175,9 @@ int main(int argc, char* argv[]) {
         int graphEditDistanceResult = graphEditDistance(readGraphResult1.multigraph, readGraphResult2.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Graph edit distance: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << graphEditDistanceResult << termcolor::reset << std::endl;
+        std::cout << "Graph edit distance: " << termcolor::on_bright_white << termcolor::grey << graphEditDistanceResult << termcolor::reset << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
 
@@ -192,9 +195,9 @@ int main(int argc, char* argv[]) {
         int graphEditDistancePolynomialApproximationResult = graphEditDistancePolynomialApproximation(readGraphResult1.multigraph, readGraphResult2.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Graph edit distance: " << termcolor::on_bright_white << termcolor::color<0, 0, 0> << graphEditDistancePolynomialApproximationResult << termcolor::reset << std::endl;
+        std::cout << "Graph edit distance: " << termcolor::on_bright_white << termcolor::grey << graphEditDistancePolynomialApproximationResult << termcolor::reset << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
 
@@ -220,7 +223,7 @@ int main(int argc, char* argv[]) {
         renderSelectionOnMultigraph(readGraphResult2.multigraph, selections.second);
         std::cout << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
 
@@ -246,7 +249,7 @@ int main(int argc, char* argv[]) {
         renderSelectionOnMultigraph(readGraphResult2.multigraph, selections.second);
         std::cout << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
 
@@ -272,7 +275,7 @@ int main(int argc, char* argv[]) {
         renderSelectionOnMultigraph(readGraphResult2.multigraph, selections.second);
         std::cout << std::endl;
         return {
-            .timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
 
@@ -303,7 +306,7 @@ int main(int argc, char* argv[]) {
     }
 
     AlgorithmRunResult algorithmRunResult = {
-        .timeMillis = 0
+        0
     };
 
     switch (selectedAlgorithmToRun) {

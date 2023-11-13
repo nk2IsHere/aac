@@ -2,7 +2,20 @@
 // Created by Nikita Kozlov on 07.11.2023.
 //
 
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <set>
+#include <vector>
+#include <utility>
+#include <chrono>
+#include <algorithm>
+#include <random>
+#include <limits>
+
 #include "graph_utils.h"
+#include "graph_solution_4.h"
+#include "graph_solution_2_polynomial_approximation.h"
 
 #ifndef AAC_LABORATORIES_GRAPH_SOLUTION_4_POLYNOMIAL_APPROXIMATION_H
 #define AAC_LABORATORIES_GRAPH_SOLUTION_4_POLYNOMIAL_APPROXIMATION_H

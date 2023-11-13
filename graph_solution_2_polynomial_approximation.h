@@ -2,6 +2,17 @@
 // Created by Nikita Kozlov on 05.11.2023.
 //
 
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <set>
+#include <vector>
+#include <utility>
+#include <chrono>
+#include <algorithm>
+#include <random>
+#include <limits>
+
 #include "graph_utils.h"
 
 #ifndef AAC_LABORATORIES_GRAPH_SOLUTION_2_POLYNOMIAL_APPROXIMATION_H
