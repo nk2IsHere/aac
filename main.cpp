@@ -2,6 +2,11 @@
 #include <string>
 #include <fstream>
 #include <set>
+#include <vector>
+#include <utility>
+#include <chrono>
+#include <algorithm>
+#include <random>
 
 #include "library/clipp.h"
 #include "library/termcolor.h"
