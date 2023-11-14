@@ -92,20 +92,20 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 // the result will be:
                 // 5 4 3 4 1
 
-//                std::cout << "Selections: " << std::endl;
-//                std::cout << "Selection 1: ";
-//                for (auto& selection : selection1) {
-//                    std::cout << selection << " ";
-//                }
-//                std::cout << std::endl;
-//                std::cout << "Selection 2: ";
-//                for (auto& selection : selection2) {
-//                    std::cout << selection << " ";
-//                }
-//                std::cout << std::endl;
+                std::cout << "Selections: " << std::endl;
+                std::cout << "Selection 1: ";
+                for (auto& selection : selection1) {
+                    std::cout << selection << " ";
+                }
+                std::cout << std::endl;
+                std::cout << "Selection 2: ";
+                for (auto& selection : selection2) {
+                    std::cout << selection << " ";
+                }
+                std::cout << std::endl;
 
 
-//                // out submultigraph1
+//                 out submultigraph1
 //                std::cout << "Submultigraph 1: " << std::endl;
 //                for (auto& row : submultigraph1) {
 //                    for (auto& element : row) {
@@ -124,32 +124,44 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
 //                }
 //                std::cout << std::endl;
 
-                auto degreeSequence1 = degreeSequence(submultigraph1);
-                auto degreeSequence2 = degreeSequence(submultigraph2);
 
-                std::vector<int> minimalDegreeSequence(degreeSequence1.size());
+                MultigraphAdjacencyMatrix minimalSubmultigraph{submultigraph1.size(), std::vector<int>(submultigraph1.size())};
+                bool minimalSubmultigraphDoesNotCoverAllVertices = false;
+                int minimalSubmultigraphNumVertices = submultigraph1.size();
+                int minimalSubmultigraphNumEdges = 0;
 
-                for (int j = 0; j < degreeSequence1.size(); ++j) {
-                    minimalDegreeSequence[j] = std::min(degreeSequence1[j].second, degreeSequence2[j].second);
+                for (int i = 0; i < minimalSubmultigraph.size(); i++) {
+                    for (int j = i; j < minimalSubmultigraph.size(); j++) {
+                        minimalSubmultigraph[i][j] = std::min(submultigraph1[i][j], submultigraph2[i][j]);
+                        minimalSubmultigraph[j][i] = std::min(submultigraph1[i][j], submultigraph2[i][j]);
 
-//                    std::cout << degreeSequence1[j].second << " " << degreeSequence2[j].second << " " << minimalDegreeSequence[j] << "; ";
-
-                    // If the minimal degree sequence is 0, then the submultigraphs are not isomorphic at all
-                    if (minimalDegreeSequence[j] == 0) {
-                        minimalDegreeSequence.clear();
-                        break;
+                        minimalSubmultigraphNumEdges += minimalSubmultigraph[i][j];
+                        if (
+                            minimalSubmultigraph[i][j] == 0
+                            && (submultigraph1[i][j] != 0 || submultigraph2[i][j] != 0)
+                        ) {
+                            minimalSubmultigraphDoesNotCoverAllVertices = true;
+                        }
                     }
                 }
 
+//                // out minimalSubmultigraph
+//                std::cout << "Minimal submultigraph: " << std::endl;
+//                for (auto& row : minimalSubmultigraph) {
+//                    for (auto& element : row) {
+//                        std::cout << element << " ";
+//                    }
+//                    std::cout << std::endl;
+//                }
 //                std::cout << std::endl;
 
-                if (minimalDegreeSequence.empty()) {
+                if (minimalSubmultigraphDoesNotCoverAllVertices) {
                     continue;
                 }
 
                 MultigraphSize minimalDegreeSequenceMultigraphSize = {
-                    (int)minimalDegreeSequence.size(),
-                    std::accumulate(minimalDegreeSequence.begin(), minimalDegreeSequence.end(), 0)
+                    minimalSubmultigraphNumVertices,
+                    minimalSubmultigraphNumEdges
                 };
 
                 if (compareSize(minimalDegreeSequenceMultigraphSize, currentMaximalCommonSubmultigraphSize) == 1) {
