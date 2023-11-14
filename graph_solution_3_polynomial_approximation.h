@@ -19,7 +19,7 @@
 #ifndef AAC_LABORATORIES_GRAPH_SOLUTION_3_POLYNOMIAL_APPROXIMATION_H
 #define AAC_LABORATORIES_GRAPH_SOLUTION_3_POLYNOMIAL_APPROXIMATION_H
 
-CompleteMultigraph maximalCliqueForSingleVertexGreedy(const MultigraphAdjacencyMatrix& multigraph, int vertex) {
+CliqueAlgorithmResult maximalCliqueForSingleVertexGreedy(const MultigraphAdjacencyMatrix& multigraph, int vertex) {
     // Time complexity: O(V^2)
 
     int n = multigraph.size();
@@ -57,14 +57,18 @@ CompleteMultigraph maximalCliqueForSingleVertexGreedy(const MultigraphAdjacencyM
     }
 
     int alpha = minimalAmountOfConnectionsBetweenVerticesInCompleteMultigraph(multigraph, clique);
-    return {
+    CompleteMultigraph completeMultigraph = {
         alpha,
         (int)clique.size()
     };
+
+    return {
+        completeMultigraph,
+        clique
+    };
 }
 
-
-CompleteMultigraph maximalCliquePolynomialApproximation(const MultigraphAdjacencyMatrix& multigraph) {
+CliqueAlgorithmResult maximalCliquePolynomialApproximation(const MultigraphAdjacencyMatrix& multigraph) {
     // Time complexity: O(V^3)
 
     auto multigraphSize = size(multigraph);
@@ -72,18 +76,29 @@ CompleteMultigraph maximalCliquePolynomialApproximation(const MultigraphAdjacenc
     // Find the largest clique for each vertex
     // and return the largest one
 
+    std::vector<int> largestCompleteMultigraphSelection = {};
     CompleteMultigraph largestCompleteMultigraph = {0, 0};
+
     for (int i = 0; i < multigraphSize.numVertices; i++) {
-        CompleteMultigraph currentCompleteMultigraph = maximalCliqueForSingleVertexGreedy(multigraph, i);
+        CliqueAlgorithmResult currentResult = maximalCliqueForSingleVertexGreedy(multigraph, i);
+
+        CompleteMultigraph currentCompleteMultigraph = currentResult.completeMultigraph;
+        std::vector<int> currentSelection = currentResult.selection;
+
         if (currentCompleteMultigraph.n > largestCompleteMultigraph.n) {
+            largestCompleteMultigraphSelection = currentSelection;
             largestCompleteMultigraph = currentCompleteMultigraph;
         }
         if(currentCompleteMultigraph.n == largestCompleteMultigraph.n && currentCompleteMultigraph.alpha > largestCompleteMultigraph.alpha) {
+            largestCompleteMultigraphSelection = currentSelection;
             largestCompleteMultigraph = currentCompleteMultigraph;
         }
     }
 
-    return largestCompleteMultigraph;
+    return {
+        largestCompleteMultigraph,
+        largestCompleteMultigraphSelection
+    };
 }
 
 #endif //AAC_LABORATORIES_GRAPH_SOLUTION_3_POLYNOMIAL_APPROXIMATION_H

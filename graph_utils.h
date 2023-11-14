@@ -25,6 +25,11 @@ struct CompleteMultigraph {
     int n;
 };
 
+struct CliqueAlgorithmResult {
+    CompleteMultigraph completeMultigraph;
+    std::vector<int> selection;
+};
+
 struct ReadGraphResult {
     int numVertices;
     MultigraphAdjacencyMatrix multigraph;

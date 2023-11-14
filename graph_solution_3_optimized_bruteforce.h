@@ -18,8 +18,8 @@
 
 #include <algorithm> // For std::sort
 
-CompleteMultigraph maximalCliqueBruteforceOptimized(const MultigraphAdjacencyMatrix& multigraph) {
-    // For every single selection of vertices in size of 2 to |V|
+CliqueAlgorithmResult maximalCliqueBruteforceOptimized(const MultigraphAdjacencyMatrix& multigraph) {
+    // For every single selection of selection in size of 2 to |V|
     // 1. check if it is a complete multigraph
     // 2. if yes, return it
     // 3. if no, continue
@@ -36,6 +36,7 @@ CompleteMultigraph maximalCliqueBruteforceOptimized(const MultigraphAdjacencyMat
     int minimalSize = 2; // Minimal size of a complete multigraph
     int currentCompleteGraphSize = 0; // Current size of the complete multigraph
 
+    std::vector<int> largestCompleteMultigraphSelection = {};
     CompleteMultigraph largestCompleteMultigraph = {0, 0};
 
     // Iterate over all possible bitsets starting from the largest one.
@@ -83,17 +84,22 @@ CompleteMultigraph maximalCliqueBruteforceOptimized(const MultigraphAdjacencyMat
 
 //        std::cout << "This is a " << alpha << "K" << n << " graph" << std::endl;
         if (n > largestCompleteMultigraph.n) {
+            largestCompleteMultigraphSelection = currentSelection;
             largestCompleteMultigraph = {alpha, n};
         }
 
         if (n == largestCompleteMultigraph.n && alpha > largestCompleteMultigraph.alpha) {
+            largestCompleteMultigraphSelection = currentSelection;
             largestCompleteMultigraph = {alpha, n};
         }
 
         currentCompleteGraphSize = n;
     }
 
-    return largestCompleteMultigraph;
+    return {
+        largestCompleteMultigraph,
+        largestCompleteMultigraphSelection
+    };
 }
 
 #endif //AAC_LABORATORIES_GRAPH_SOLUTION_3_OPTIMIZED_BRUTEFORCE_H

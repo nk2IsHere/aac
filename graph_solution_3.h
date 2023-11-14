@@ -63,8 +63,8 @@ std::vector<std::vector<int>> enumerateAllPossibleSelectionsFromNtoM(int n, int 
     return result;
 }
 
-CompleteMultigraph maximalCliqueBruteforce(const MultigraphAdjacencyMatrix& multigraph) {
-    // For every single selection of vertices in size of 2 to |V|
+CliqueAlgorithmResult maximalCliqueBruteforce(const MultigraphAdjacencyMatrix& multigraph) {
+    // For every single selection of selection in size of 2 to |V|
     // 1. check if it is a complete multigraph
     // 2. if yes, store it for later
     // 3. if no, continue
@@ -75,6 +75,7 @@ CompleteMultigraph maximalCliqueBruteforce(const MultigraphAdjacencyMatrix& mult
     auto multigraphSize = size(multigraph);
 
     // Alpha, n
+    std::vector<int> largestCompleteMultigraphSelection = {};
     CompleteMultigraph largestCompleteMultigraph = {0, 0};
     for(const auto& selection: enumerateAllPossibleSelectionsFromNtoM(0, multigraphSize.numVertices - 1, 2)) {
         if(isSetOfVerticesFormCompleteMultigraph(multigraph, selection)) {
@@ -89,16 +90,21 @@ CompleteMultigraph maximalCliqueBruteforce(const MultigraphAdjacencyMatrix& mult
 
 //            std::cout << "This is a " << alpha << "K" << n << " graph" << std::endl;
             if (n > largestCompleteMultigraph.n) {
+                largestCompleteMultigraphSelection = selection;
                 largestCompleteMultigraph = {alpha, n};
             }
 
             if (n == largestCompleteMultigraph.n && alpha > largestCompleteMultigraph.alpha) {
+                largestCompleteMultigraphSelection = selection;
                 largestCompleteMultigraph = {alpha, n};
             }
         }
     }
 
-    return largestCompleteMultigraph;
+    return {
+        largestCompleteMultigraph,
+        largestCompleteMultigraphSelection
+    };
 }
 
 #endif //AAC_LABORATORIES_GRAPH_SOLUTION_3_UNOPTIMIZED_H

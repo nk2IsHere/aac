@@ -120,7 +120,8 @@ int main(int argc, char* argv[]) {
         auto completeMultigraph = maximalCliqueBruteforce(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.completeMultigraph.alpha << "K" << completeMultigraph.completeMultigraph.n << termcolor::reset << std::endl;
+        renderSelectionOnMultigraph(readGraphResult.multigraph, completeMultigraph.selection);
         return {
             std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
@@ -138,7 +139,8 @@ int main(int argc, char* argv[]) {
         auto completeMultigraph = maximalCliqueBruteforceOptimized(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.completeMultigraph.alpha << "K" << completeMultigraph.completeMultigraph.n << termcolor::reset << std::endl;
+        renderSelectionOnMultigraph(readGraphResult.multigraph, completeMultigraph.selection);
         return {
             std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
@@ -156,7 +158,8 @@ int main(int argc, char* argv[]) {
         auto completeMultigraph = maximalCliquePolynomialApproximation(readGraphResult.multigraph);
         auto end = std::chrono::high_resolution_clock::now();
 
-        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.alpha << "K" << completeMultigraph.n << termcolor::reset << std::endl;
+        std::cout << "Maximal clique: " << termcolor::on_bright_white << termcolor::grey << completeMultigraph.completeMultigraph.alpha << "K" << completeMultigraph.completeMultigraph.n << termcolor::reset << std::endl;
+        renderSelectionOnMultigraph(readGraphResult.multigraph, completeMultigraph.selection);
         return {
             std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
