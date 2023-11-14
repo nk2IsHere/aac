@@ -301,8 +301,192 @@ int main(int argc, char* argv[]) {
     );
 
     if(!clipp::parse(argc, argv, cli)) {
-        std::cout << clipp::make_man_page(cli, argv[0]);
-        return 1;
+        // Use prompts to get the arguments
+        int selectedAlgorithmToRunString;
+        std::cout << "Select algorithm to run: " << std::endl;
+        std::cout << "1. Generate Multigraph" << std::endl;
+        std::cout << "2. Maximal Clique Bruteforce" << std::endl;
+        std::cout << "3. Maximal Clique Bruteforce Optimized" << std::endl;
+        std::cout << "4. Maximal Clique Polynomial Approximation" << std::endl;
+        std::cout << "5. Graph Edit Distance" << std::endl;
+        std::cout << "6. Graph Edit Distance Polynomial Approximation" << std::endl;
+        std::cout << "7. Maximal Common Submultigraph" << std::endl;
+        std::cout << "8. Maximal Common Submultigraph Polynomial Approximation" << std::endl;
+        std::cout << "9. Maximal Common Submultigraph Polynomial Approximation Improved Search" << std::endl;
+
+        std::cout << "Enter number: ";
+        std::cin >> selectedAlgorithmToRunString;
+        std::cout << std::endl;
+
+        switch (selectedAlgorithmToRunString) {
+            case 1:
+                selectedAlgorithmToRun = AlgorithmToRun::GenerateMultigraph;
+                std::cout << "Enter filename prefix: ";
+                std::cin >> filenamePrefix;
+                std::cout << std::endl;
+                if (filenamePrefix.empty()) {
+                    std::cout << "Filename prefix cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                std::cout << "Enter graph count: ";
+                std::cin >> graphCount;
+                std::cout << std::endl;
+                if (graphCount <= 0) {
+                    std::cout << "Graph count must be greater than 0" << std::endl;
+                    return 1;
+                }
+
+
+                std::cout << "Enter num vertices: ";
+                std::cin >> numVertices;
+                std::cout << std::endl;
+                if (numVertices <= 0) {
+                    std::cout << "Num vertices must be greater than 0" << std::endl;
+                    return 1;
+                }
+
+                std::cout << "Enter num edges: ";
+                std::cin >> numEdges;
+                std::cout << std::endl;
+                if (numEdges <= 0) {
+                    std::cout << "Num edges must be greater than 0" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 2:
+                selectedAlgorithmToRun = AlgorithmToRun::MaximalCliqueBruteforce;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 3:
+                selectedAlgorithmToRun = AlgorithmToRun::MaximalCliqueBruteforceOptimized;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 4:
+                selectedAlgorithmToRun = AlgorithmToRun::MaximalCliquePolynomialApproximation;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 5:
+                selectedAlgorithmToRun = AlgorithmToRun::GraphEditDistance;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                std::cout << "Enter filename 2: ";
+                std::cin >> filename2;
+                std::cout << std::endl;
+                if (filename2.empty()) {
+                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 6:
+                selectedAlgorithmToRun = AlgorithmToRun::GraphEditDistancePolynomialApproximation;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                std::cout << "Enter filename 2: ";
+                std::cin >> filename2;
+                std::cout << std::endl;
+                if (filename2.empty()) {
+                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 7:
+                selectedAlgorithmToRun = AlgorithmToRun::MaximalCommonSubmultigraph;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                std::cout << "Enter filename 2: ";
+                std::cin >> filename2;
+                std::cout << std::endl;
+                if (filename2.empty()) {
+                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 8:
+                selectedAlgorithmToRun = AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximation;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                std::cout << "Enter filename 2: ";
+                std::cin >> filename2;
+                std::cout << std::endl;
+                if (filename2.empty()) {
+                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            case 9:
+                selectedAlgorithmToRun = AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximationImprovedSearch;
+                std::cout << "Enter filename 1: ";
+                std::cin >> filename1;
+                std::cout << std::endl;
+                if (filename1.empty()) {
+                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                std::cout << "Enter filename 2: ";
+                std::cin >> filename2;
+                std::cout << std::endl;
+                if (filename2.empty()) {
+                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                    return 1;
+                }
+
+                break;
+            default:
+                std::cout << "Invalid selection" << std::endl;
+                return 1;
+        }
     }
 
     AlgorithmRunResult algorithmRunResult = {
