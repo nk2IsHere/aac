@@ -89,8 +89,7 @@ int main(int argc, char* argv[]) {
     int numVertices;
     int numEdges;
 
-    std::string filename1;
-    std::string filename2;
+    std::string filename;
 
     auto generateMultigraphRunner = [](const std::string& filenamePrefix, int graphCount, int numVertices, int numEdges) -> AlgorithmRunResult {
         auto start = std::chrono::high_resolution_clock::now();
@@ -104,7 +103,7 @@ int main(int argc, char* argv[]) {
             std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
-    
+
     auto generateMultigraphCli = (
         clipp::command("generate-multigraph").set(selectedAlgorithmToRun, AlgorithmToRun::GenerateMultigraph),
         clipp::value("filename prefix", filenamePrefix),
@@ -114,7 +113,20 @@ int main(int argc, char* argv[]) {
     );
 
     auto maximalCliqueBruteforceRunner = [](const std::string& filename) -> AlgorithmRunResult {
-        auto readGraphResult = readGraphFromFile(filename);
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.empty()) {
+            std::cout << "Error: file must contain at least 1 graph" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 1) {
+            std::cout << "Warning: file contains more than 1 graph, only the first graph will be used" << std::endl;
+        }
+
+        auto readGraphResult = readGraphResults[0];
 
         auto start = std::chrono::high_resolution_clock::now();
         auto completeMultigraph = maximalCliqueBruteforce(readGraphResult.multigraph);
@@ -126,14 +138,27 @@ int main(int argc, char* argv[]) {
             std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
         };
     };
-    
+
     auto maximalCliqueBruteforceCli = (
         clipp::command("maximal-clique-bruteforce").set(selectedAlgorithmToRun, AlgorithmToRun::MaximalCliqueBruteforce),
-        clipp::value("filename 1", filename1)
+        clipp::value("filename", filename)
     );
 
     auto maximalCliqueBruteforceOptimizedRunner = [](const std::string& filename) -> AlgorithmRunResult {
-        auto readGraphResult = readGraphFromFile(filename);
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.empty()) {
+            std::cout << "Error: file must contain at least 1 graph" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 1) {
+            std::cout << "Warning: file contains more than 1 graph, only the first graph will be used" << std::endl;
+        }
+
+        auto readGraphResult = readGraphResults[0];
 
         auto start = std::chrono::high_resolution_clock::now();
         auto completeMultigraph = maximalCliqueBruteforceOptimized(readGraphResult.multigraph);
@@ -148,11 +173,24 @@ int main(int argc, char* argv[]) {
 
     auto maximalCliqueBruteforceOptimizedCli = (
         clipp::command("maximal-clique-bruteforce-optimized").set(selectedAlgorithmToRun, AlgorithmToRun::MaximalCliqueBruteforceOptimized),
-        clipp::value("filename 1", filename1)
+        clipp::value("filename", filename)
     );
 
     auto maximalCliquePolynomialApproximationRunner = [](const std::string& filename) -> AlgorithmRunResult {
-        auto readGraphResult = readGraphFromFile(filename);
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.empty()) {
+            std::cout << "Error: file must contain at least 1 graph" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 1) {
+            std::cout << "Warning: file contains more than 1 graph, only the first graph will be used" << std::endl;
+        }
+
+        auto readGraphResult = readGraphResults[0];
 
         auto start = std::chrono::high_resolution_clock::now();
         auto completeMultigraph = maximalCliquePolynomialApproximation(readGraphResult.multigraph);
@@ -167,12 +205,25 @@ int main(int argc, char* argv[]) {
 
     auto maximalCliquePolynomialApproximationCli = (
         clipp::command("maximal-clique-polynomial-approximation").set(selectedAlgorithmToRun, AlgorithmToRun::MaximalCliquePolynomialApproximation),
-        clipp::value("filename 1", filename1)
+        clipp::value("filename", filename)
     );
 
-    auto graphEditDistanceRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto readGraphResult1 = readGraphFromFile(filename1);
-        auto readGraphResult2 = readGraphFromFile(filename2);
+    auto graphEditDistanceRunner = [](const std::string& filename) -> AlgorithmRunResult {
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.size() < 2) {
+            std::cout << "Error: file must contain at least 2 graphs" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 2) {
+            std::cout << "Warning: file contains more than 2 graphs, only the first 2 graphs will be used" << std::endl;
+        }
+
+        auto readGraphResult1 = readGraphResults[0];
+        auto readGraphResult2 = readGraphResults[1];
 
         auto start = std::chrono::high_resolution_clock::now();
         int graphEditDistanceResult = graphEditDistance(readGraphResult1.multigraph, readGraphResult2.multigraph);
@@ -186,13 +237,25 @@ int main(int argc, char* argv[]) {
 
     auto graphEditDistanceCli = (
         clipp::command("graph-edit-distance").set(selectedAlgorithmToRun, AlgorithmToRun::GraphEditDistance),
-        clipp::value("filename 1", filename1),
-        clipp::value("filename 2", filename2)
+        clipp::value("filename", filename)
     );
 
-    auto graphEditDistancePolynomialApproximationRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto readGraphResult1 = readGraphFromFile(filename1);
-        auto readGraphResult2 = readGraphFromFile(filename2);
+    auto graphEditDistancePolynomialApproximationRunner = [](const std::string& filename) -> AlgorithmRunResult {
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.size() < 2) {
+            std::cout << "Error: file must contain at least 2 graphs" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 2) {
+            std::cout << "Warning: file contains more than 2 graphs, only the first 2 graphs will be used" << std::endl;
+        }
+
+        auto readGraphResult1 = readGraphResults[0];
+        auto readGraphResult2 = readGraphResults[1];
 
         auto start = std::chrono::high_resolution_clock::now();
         int graphEditDistancePolynomialApproximationResult = graphEditDistancePolynomialApproximation(readGraphResult1.multigraph, readGraphResult2.multigraph);
@@ -206,13 +269,25 @@ int main(int argc, char* argv[]) {
 
     auto graphEditDistancePolynomialApproximationCli = (
         clipp::command("graph-edit-distance-polynomial-approximation").set(selectedAlgorithmToRun, AlgorithmToRun::GraphEditDistancePolynomialApproximation),
-        clipp::value("filename 1", filename1),
-        clipp::value("filename 2", filename2)
+        clipp::value("filename", filename)
     );
 
-    auto maximalCommonSubmultigraphRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto readGraphResult1 = readGraphFromFile(filename1);
-        auto readGraphResult2 = readGraphFromFile(filename2);
+    auto maximalCommonSubmultigraphRunner = [](const std::string& filename) -> AlgorithmRunResult {
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.size() < 2) {
+            std::cout << "Error: file must contain at least 2 graphs" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 2) {
+            std::cout << "Warning: file contains more than 2 graphs, only the first 2 graphs will be used" << std::endl;
+        }
+
+        auto readGraphResult1 = readGraphResults[0];
+        auto readGraphResult2 = readGraphResults[1];
 
         auto start = std::chrono::high_resolution_clock::now();
         auto selections = maximalCommonSubmultigraph(readGraphResult1.multigraph, readGraphResult2.multigraph);
@@ -232,13 +307,25 @@ int main(int argc, char* argv[]) {
 
     auto maximalCommonSubmultigraphCli = (
         clipp::command("maximal-common-submultigraph").set(selectedAlgorithmToRun, AlgorithmToRun::MaximalCommonSubmultigraph),
-        clipp::value("filename 1", filename1),
-        clipp::value("filename 2", filename2)
+        clipp::value("filename", filename)
     );
 
-    auto maximalCommonSubmultigraphPolynomialApproximationRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto readGraphResult1 = readGraphFromFile(filename1);
-        auto readGraphResult2 = readGraphFromFile(filename2);
+    auto maximalCommonSubmultigraphPolynomialApproximationRunner = [](const std::string& filename) -> AlgorithmRunResult {
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.size() < 2) {
+            std::cout << "Error: file must contain at least 2 graphs" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 2) {
+            std::cout << "Warning: file contains more than 2 graphs, only the first 2 graphs will be used" << std::endl;
+        }
+
+        auto readGraphResult1 = readGraphResults[0];
+        auto readGraphResult2 = readGraphResults[1];
 
         auto start = std::chrono::high_resolution_clock::now();
         auto selections = maximalCommonSubmultigraphPolynomialApproximation(readGraphResult1.multigraph, readGraphResult2.multigraph);
@@ -258,13 +345,25 @@ int main(int argc, char* argv[]) {
 
     auto maximalCommonSubmultigraphPolynomialApproximationCli = (
         clipp::command("maximal-common-submultigraph-polynomial-approximation").set(selectedAlgorithmToRun, AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximation),
-        clipp::value("filename 1", filename1),
-        clipp::value("filename 2", filename2)
+        clipp::value("filename", filename)
     );
 
-    auto maximalCommonSubmultigraphPolynomialApproximationImprovedSearchRunner = [](const std::string& filename1, const std::string& filename2) -> AlgorithmRunResult {
-        auto readGraphResult1 = readGraphFromFile(filename1);
-        auto readGraphResult2 = readGraphFromFile(filename2);
+    auto maximalCommonSubmultigraphPolynomialApproximationImprovedSearchRunner = [](const std::string& filename) -> AlgorithmRunResult {
+        auto readGraphResults = readGraphFromFile(filename);
+
+        if(readGraphResults.size() < 2) {
+            std::cout << "Error: file must contain at least 2 graphs" << std::endl;
+            return {
+                0
+            };
+        }
+
+        if (readGraphResults.size() > 2) {
+            std::cout << "Warning: file contains more than 2 graphs, only the first 2 graphs will be used" << std::endl;
+        }
+
+        auto readGraphResult1 = readGraphResults[0];
+        auto readGraphResult2 = readGraphResults[1];
 
         auto start = std::chrono::high_resolution_clock::now();
         auto selections = maximalCommonSubmultigraphPolynomialApproximationImprovedSearch(readGraphResult1.multigraph, readGraphResult2.multigraph);
@@ -284,8 +383,7 @@ int main(int argc, char* argv[]) {
 
     auto maximalCommonSubmultigraphPolynomialApproximationImprovedSearchCli = (
         clipp::command("maximal-common-submultigraph-polynomial-approximation-improved-search").set(selectedAlgorithmToRun, AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximationImprovedSearch),
-        clipp::value("filename 1", filename1),
-        clipp::value("filename 2", filename2)
+        clipp::value("filename", filename)
     );
 
     auto cli = (
@@ -320,6 +418,8 @@ int main(int argc, char* argv[]) {
         std::cout << "Enter number: ";
         std::cin >> selectedAlgorithmToRunString;
         std::cout << std::endl;
+
+        shouldPrintTime = true;
 
         switch (selectedAlgorithmToRunString) {
             case 1:
@@ -360,128 +460,88 @@ int main(int argc, char* argv[]) {
                 break;
             case 2:
                 selectedAlgorithmToRun = AlgorithmToRun::MaximalCliqueBruteforce;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
                 break;
             case 3:
                 selectedAlgorithmToRun = AlgorithmToRun::MaximalCliqueBruteforceOptimized;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
                 break;
             case 4:
                 selectedAlgorithmToRun = AlgorithmToRun::MaximalCliquePolynomialApproximation;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
                 break;
             case 5:
                 selectedAlgorithmToRun = AlgorithmToRun::GraphEditDistance;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
-                    return 1;
-                }
-
-                std::cout << "Enter filename 2: ";
-                std::cin >> filename2;
-                std::cout << std::endl;
-                if (filename2.empty()) {
-                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
                 break;
             case 6:
                 selectedAlgorithmToRun = AlgorithmToRun::GraphEditDistancePolynomialApproximation;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
-                    return 1;
-                }
-
-                std::cout << "Enter filename 2: ";
-                std::cin >> filename2;
-                std::cout << std::endl;
-                if (filename2.empty()) {
-                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
                 break;
             case 7:
                 selectedAlgorithmToRun = AlgorithmToRun::MaximalCommonSubmultigraph;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
-                    return 1;
-                }
-
-                std::cout << "Enter filename 2: ";
-                std::cin >> filename2;
-                std::cout << std::endl;
-                if (filename2.empty()) {
-                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
                 break;
             case 8:
                 selectedAlgorithmToRun = AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximation;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
-                    return 1;
-                }
-
-                std::cout << "Enter filename 2: ";
-                std::cin >> filename2;
-                std::cout << std::endl;
-                if (filename2.empty()) {
-                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
                 break;
             case 9:
                 selectedAlgorithmToRun = AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximationImprovedSearch;
-                std::cout << "Enter filename 1: ";
-                std::cin >> filename1;
+                std::cout << "Enter filename: ";
+                std::cin >> filename;
                 std::cout << std::endl;
-                if (filename1.empty()) {
-                    std::cout << "Filename 1 cannot be empty" << std::endl;
-                    return 1;
-                }
-
-                std::cout << "Enter filename 2: ";
-                std::cin >> filename2;
-                std::cout << std::endl;
-                if (filename2.empty()) {
-                    std::cout << "Filename 2 cannot be empty" << std::endl;
+                if (filename.empty()) {
+                    std::cout << "Filename cannot be empty" << std::endl;
                     return 1;
                 }
 
@@ -501,28 +561,28 @@ int main(int argc, char* argv[]) {
             algorithmRunResult = generateMultigraphRunner(filenamePrefix, graphCount, numVertices, numEdges);
             break;
         case AlgorithmToRun::MaximalCliqueBruteforce:
-            algorithmRunResult = maximalCliqueBruteforceRunner(filename1);
+            algorithmRunResult = maximalCliqueBruteforceRunner(filename);
             break;
         case AlgorithmToRun::MaximalCliqueBruteforceOptimized:
-            algorithmRunResult = maximalCliqueBruteforceOptimizedRunner(filename1);
+            algorithmRunResult = maximalCliqueBruteforceOptimizedRunner(filename);
             break;
         case AlgorithmToRun::MaximalCliquePolynomialApproximation:
-            algorithmRunResult = maximalCliquePolynomialApproximationRunner(filename1);
+            algorithmRunResult = maximalCliquePolynomialApproximationRunner(filename);
             break;
         case AlgorithmToRun::GraphEditDistance:
-            algorithmRunResult = graphEditDistanceRunner(filename1, filename2);
+            algorithmRunResult = graphEditDistanceRunner(filename);
             break;
         case AlgorithmToRun::GraphEditDistancePolynomialApproximation:
-            algorithmRunResult = graphEditDistancePolynomialApproximationRunner(filename1, filename2);
+            algorithmRunResult = graphEditDistancePolynomialApproximationRunner(filename);
             break;
         case AlgorithmToRun::MaximalCommonSubmultigraph:
-            algorithmRunResult = maximalCommonSubmultigraphRunner(filename1, filename2);
+            algorithmRunResult = maximalCommonSubmultigraphRunner(filename);
             break;
         case AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximation:
-            algorithmRunResult = maximalCommonSubmultigraphPolynomialApproximationRunner(filename1, filename2);
+            algorithmRunResult = maximalCommonSubmultigraphPolynomialApproximationRunner(filename);
             break;
         case AlgorithmToRun::MaximalCommonSubmultigraphPolynomialApproximationImprovedSearch:
-            algorithmRunResult = maximalCommonSubmultigraphPolynomialApproximationImprovedSearchRunner(filename1, filename2);
+            algorithmRunResult = maximalCommonSubmultigraphPolynomialApproximationImprovedSearchRunner(filename);
             break;
     }
 

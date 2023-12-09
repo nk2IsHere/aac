@@ -146,14 +146,14 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 }
 
 //                // out minimalSubmultigraph
-//                std::cout << "Minimal submultigraph: " << std::endl;
-//                for (auto& row : minimalSubmultigraph) {
-//                    for (auto& element : row) {
-//                        std::cout << element << " ";
-//                    }
-//                    std::cout << std::endl;
-//                }
-//                std::cout << std::endl;
+                std::cout << "Minimal submultigraph: " << std::endl;
+                for (auto& row : minimalSubmultigraph) {
+                    for (auto& element : row) {
+                        std::cout << element << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                std::cout << std::endl;
 
                 if (minimalSubmultigraphDoesNotCoverAllVertices) {
                     continue;

@@ -152,17 +152,25 @@ void writeGraph(std::ofstream& outputFile, const MultigraphAdjacencyMatrix& mult
 }
 
 
-ReadGraphResult readGraphFromFile(const std::string& filename) {
+std::vector<ReadGraphResult> readGraphFromFile(const std::string& filename) {
     std::ifstream inputFile(filename);
     if (!inputFile.is_open()) {
         std::cout << "Error: cannot open file " << filename << std::endl;
         throw std::runtime_error("Cannot open file");
     }
 
-    auto readGraphResult = readGraph(inputFile);
-    inputFile.close();
+    int graphCount;
+    inputFile >> graphCount;
 
-    return readGraphResult;
+    std::vector<ReadGraphResult> readGraphResults(graphCount);
+
+    for (int i = 0; i < graphCount; ++i) {
+        readGraphResults[i] = readGraph(inputFile);
+        // Skip the empty line
+        inputFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    return readGraphResults;
 }
 
 void writeGraphToFile(const std::string& filename, const MultigraphAdjacencyMatrix& multigraph) {
@@ -172,6 +180,9 @@ void writeGraphToFile(const std::string& filename, const MultigraphAdjacencyMatr
         throw std::runtime_error("Cannot open file");
     }
 
+    int graphCount = 1;
+
+    outputFile << graphCount << std::endl;
     writeGraph(outputFile, multigraph);
     outputFile.close();
 }
