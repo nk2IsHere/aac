@@ -92,17 +92,17 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 // the result will be:
                 // 5 4 3 4 1
 
-                std::cout << "Selections: " << std::endl;
-                std::cout << "Selection 1: ";
-                for (auto& selection : selection1) {
-                    std::cout << selection << " ";
-                }
-                std::cout << std::endl;
-                std::cout << "Selection 2: ";
-                for (auto& selection : selection2) {
-                    std::cout << selection << " ";
-                }
-                std::cout << std::endl;
+//                std::cout << "Selections: " << std::endl;
+//                std::cout << "Selection 1: ";
+//                for (auto& selection : selection1) {
+//                    std::cout << selection << " ";
+//                }
+//                std::cout << std::endl;
+//                std::cout << "Selection 2: ";
+//                for (auto& selection : selection2) {
+//                    std::cout << selection << " ";
+//                }
+//                std::cout << std::endl;
 
 
 //                 out submultigraph1
@@ -146,14 +146,14 @@ std::pair<std::vector<int>, std::vector<int>> maximalCommonSubmultigraph(Multigr
                 }
 
 //                // out minimalSubmultigraph
-                std::cout << "Minimal submultigraph: " << std::endl;
-                for (auto& row : minimalSubmultigraph) {
-                    for (auto& element : row) {
-                        std::cout << element << " ";
-                    }
-                    std::cout << std::endl;
-                }
-                std::cout << std::endl;
+//                std::cout << "Minimal submultigraph: " << std::endl;
+//                for (auto& row : minimalSubmultigraph) {
+//                    for (auto& element : row) {
+//                        std::cout << element << " ";
+//                    }
+//                    std::cout << std::endl;
+//                }
+//                std::cout << std::endl;
 
                 if (minimalSubmultigraphDoesNotCoverAllVertices) {
                     continue;
